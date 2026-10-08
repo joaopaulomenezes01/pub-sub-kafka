@@ -1,6 +1,6 @@
 from PIL import Image, ImageOps
 import os
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka import Consumer, Producer, KafkaError
 import json
 import logging
 from time import sleep
@@ -8,6 +8,16 @@ from time import sleep
 OUT_FOLDER = '/processed/rotate/'
 NEW = '_rotate'
 IN_FOLDER = "/appdata/static/uploads/"
+
+### Producer (avisa o notificador quando termina)
+p = Producer({'bootstrap.servers': 'kafka1:19091,kafka2:19092,kafka3:19093'})
+
+
+def notify(filename, operation):
+    msg = {'file': filename, 'operation': operation}
+    p.produce('notificacao', json.dumps(msg).encode('utf-8'))
+    p.flush()
+
 
 def create_rotate(path_file):
     pathname, filename = os.path.split(path_file)
@@ -47,6 +57,7 @@ try:
             filename = data['new_file']
             logging.warning(f"READING {filename}")
             create_rotate(IN_FOLDER + filename)
+            notify(filename, 'rotacionado')
             logging.warning(f"ENDING {filename}")
         elif msg.error().code() == KafkaError._PARTITION_EOF:
             logging.warning('End of partition reached {0}/{1}'
