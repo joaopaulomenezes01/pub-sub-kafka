@@ -17,7 +17,7 @@ services:
     depends_on:
       - kafka1
 
- filename:
+  filename:
     build: filename-app
     container_name: filename
     volumes:
