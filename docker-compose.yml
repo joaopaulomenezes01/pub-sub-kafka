@@ -35,6 +35,15 @@ services:
     depends_on:
       - kafka1
 
+  notificador:
+    build: notificador-app
+    container_name: notificador
+    environment:
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    depends_on:
+      - kafka1
+
   zookeeper:
     image: zookeeper:3.4.9
     hostname: zookeeper
