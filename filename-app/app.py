@@ -67,3 +67,9 @@ try:
             logging.warning('End of partition reached {0}/{1}'
                   .format(msg.topic(), msg.partition()))
         else:
+                        logging.error('Error occured: {0}'.format(msg.error().str()))
+
+except KeyboardInterrupt:
+    pass
+finally:
+    c.close()
