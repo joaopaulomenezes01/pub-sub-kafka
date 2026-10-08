@@ -17,6 +17,14 @@ services:
     depends_on:
       - kafka1
 
+ filename:
+    build: filename-app
+    container_name: filename
+    volumes:
+      - ./appdata:/appdata
+    depends_on:
+      - kafka1
+
   upload:
     build: upload-app
     container_name: upload
